@@ -44,6 +44,8 @@ return array(
         'user_private_key',
         'user_info_data',
         'my_pages',
+        'rwth_sd_sync_group_member',
+        'vpl_running_processes',
     ),
 
     // List of compound indexes.
@@ -134,6 +136,30 @@ return array(
             'userfield' => array('userid'),
             'otherfields' => array('assignment'),
         ),
+        'checklist_comment' => array( // unique key mdl_checcomm_iteuse_uix
+            'userfield' => array('userid'),
+            'otherfields' => array('itemid'),
+        ),
+        'cilscheduler_slots' => array( // unique key mdl_cilsslot_ciltea_ix
+            'userfield' => array('teacherid'),
+            'otherfields' => array('cilschedulerid'),
+        ),
+        'grouptool_queued' => array( // unique key mdl_grouqueu_agruse_uix
+            'userfield' => array('userid'),
+            'otherfields' => array('agrpid'),
+        ),
+        'grouptool_registered' => array( // unique key mdl_grouregi_agruse_uix
+            'userfield' => array('userid'),
+            'otherfields' => array('agrpid'),
+        ),
+        'hvp_xapi_results' => array( // unique key mdl_hvpxapiresu_idconuse_uix
+            'userfield' => array('user_id'),
+            'otherfields' => array('id', 'content_id'),
+        ),
+        'vpl_assigned_variations' => array( // unique key mdl_vplassivari_usevpl_uix
+            'userfield' => array('userid'),
+            'otherfields' => array('vpl'),
+        ),
     ),
 
     // List of column names per table, where their content is a user.id.
@@ -141,12 +167,23 @@ return array(
     // In other words, only column names given below will be search for matching user ids.
     // The key 'default' will be applied for any non matching table name.
     'userfieldnames' => array(
+        'block_quickmail_drafts' => array('userid', 'mailto'),
+        'block_quickmail_log' => array('userid', 'failuserids', 'mailto'),
+        'checklist_check' => array('userid', 'teacherid'),
+        'checklist_comment' => array('userid', 'commentby'),
+        'cilscheduler_appointment' => array('studentid'),
+        'cilscheduler_slots' => array('teacherid'),
         'logstore_standard_log' => array('userid', 'relateduserid'),
         'message_contacts' => array('userid', 'contactid'), //compound index
         'message' => array('useridfrom', 'useridto'),
         'message_read' => array('useridfrom', 'useridto'),
+        'organizer_slot_appointments' => array('userid', 'applicantid', 'teacherapplicantid'),
+        'organizer_slot_trainer' => array('trainerid'),
+        'pdfannotator_annotations' => array('userid', 'modifiedby'),
+        'pdfannotator_comments' => array('userid', 'modifiedby'),
         'question' => array('createdby', 'modifiedby'),
-        'default' => array('authorid', 'reviewerid', 'userid', 'user_id', 'id_user', 'user'), //may appear compound index
+        'vpl_submissions' => array('userid', 'grader'),
+        'default' => array('authorid', 'reviewerid', 'userid', 'user_id', 'id_user', 'user', 'usermodified'), //may appear compound index
     ),
 
     // TableMergers to process each database table.
@@ -155,6 +192,8 @@ return array(
         'default' => 'GenericTableMerger',
         'quiz_attempts' => 'QuizAttemptsMerger',
         'assign_submission' => 'AssignSubmissionTableMerger',
+        'block_quickmail_drafts' => 'OldQuickmailMerger',
+        'block_quickmail_log' => 'OldQuickmailMerger',
     ),
 
     'alwaysRollback' => false,
